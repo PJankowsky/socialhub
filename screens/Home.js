@@ -4,7 +4,6 @@ import axios from 'axios';
 
 
 
-
 const Home = () => {
 
   const [todos, setTodos] = useState([])
@@ -34,11 +33,6 @@ const Home = () => {
 
   return (
     <View style={styles.homeContainer}>
-      <Button type="submit"
-      title='Add Title ToDo'
-      />      
-      <Button
-      title='Add Description ToDO'/>
       <FlatList
       data={todos}
       renderItem={({item})=> {
