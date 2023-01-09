@@ -4,15 +4,29 @@ import Home from '../screens/Home';
 import Profile from '../screens/Profile';
 import { Ionicons } from '@expo/vector-icons';
 import Settings from '../screens/Settings';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import UpdateTodo from '../screens/UpdateTodo';
+import AddTodo from '../screens/AddTodo';
 
 
 const Tab = createBottomTabNavigator();
 
+const HomeStack = createNativeStackNavigator();
+
+function MyStack() {
+  return (
+    <HomeStack.Navigator>
+      <HomeStack.Screen name="Home" component={Home}/>
+      <HomeStack.Screen name="UpdateTodo" component={UpdateTodo} />
+      <HomeStack.Screen name="AddTodo" component={AddTodo} />
+    </HomeStack.Navigator>
+  );
+}
 
 
 const TabRoutes = () => {
   return (
-    <Tab.Navigator 
+    <Tab.Navigator
     screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
@@ -34,12 +48,13 @@ const TabRoutes = () => {
         tabBarActiveTintColor: 'tomato',
         tabBarInactiveTintColor: 'gray',
       })}>
-        
-        <Tab.Screen name="Home" component={Home} />
+        <Tab.Screen name="Home" component={MyStack} options={{ headerShown: false }}/>
         <Tab.Screen name="Profile" component={Profile} />
-        <Tab.Screen name="Settings" component={Settings} />
-    </Tab.Navigator>
+        <Tab.Screen name="Settings" component={Settings} />       
+    </Tab.Navigator>    
   );
 }
+
+
 
 export default TabRoutes;

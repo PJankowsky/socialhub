@@ -4,11 +4,9 @@ import axios from 'axios';
 import { Ionicons, AntDesign } from '@expo/vector-icons'; 
 
 
-
-
 const Home = ({navigation}) => {
 
-
+  
   const [todos, setTodos] = useState([])
   
   const getTodos = async() => {
@@ -53,8 +51,22 @@ const Home = ({navigation}) => {
     }
   }
 
+  // const update_todo = async(id, updatedData) => {
+  //   try {
+  //     const res = await axios.put(`http://127.0.0.1:8000/update/${id}`, updatedData)
+  //     getTodos()
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
+
+
   return (
     <View style={styles.homeContainer}>
+      <TouchableOpacity style={styles.addButton}
+      onPress={() => navigation.navigate("AddTodo")}>
+      <Ionicons name="add-circle" size={75} color="tomato"/>
+      </TouchableOpacity>
       <FlatList
       data={todos}
       keyExtractor={item => item.id}
@@ -70,8 +82,12 @@ const Home = ({navigation}) => {
               onPress = {() => delete_todo(item.id)}>
               <Ionicons name="md-trash-bin-outline" size={24} color="red" />
             </TouchableOpacity>
-            <TouchableOpacity>
-              <AntDesign name="edit" size={24} color="orange" />
+            <TouchableOpacity
+            onPress={() => navigation.navigate("UpdateTodo", {
+              title: item.title,
+              description: item.description
+            })}>
+              <AntDesign name="edit" size={24} color="orange"/>
             </TouchableOpacity>
           </View>
           </View>
@@ -87,23 +103,29 @@ export default Home
 const styles = StyleSheet.create({
 
   homeContainer: {
-    padding: 30,
+    paddingHorizontal: 30,
 
   },
 
   todoContainer: {
-  
+    marginTop: 20,
     flexDirection: "row",
     backgroundColor: "white",
     borderRadius: 20,
     padding: 30,
     borderWidth: 1,
-    marginBottom: 20,
     justifyContent: "space-between"
   },
   actionBtn: {
     height: 70,
     justifyContent: "space-between",
+
+  },
+  addButton: {
+    position: "absolute",
+    bottom: 25,
+    right: 25,
+    zIndex: 999,
   }
 })
 
