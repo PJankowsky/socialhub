@@ -1,9 +1,12 @@
-import { StyleSheet, Text, View, TextInput, Button } from 'react-native'
+import { StyleSheet, Text, View, TextInput, Button, TouchableOpacity } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { Ionicons, AntDesign } from '@expo/vector-icons'; 
 import axios from 'axios';
 
+
 const UpdateTodo = ({navigation, route}) => {
+
+
     
   const [title, setTitle] = useState(route.params.title)
 
@@ -13,8 +16,16 @@ const UpdateTodo = ({navigation, route}) => {
 
   console.log(route.params.title);
 
-  const UpdateTodo = () => {
-
+  const UpdateTodo = async(id) => {
+    try {
+      const response = await axios.put(`http://127.0.0.1:8000/todos/${route.params.pk}`,{
+        title: title,
+        description: description
+      })
+      navigation.goBack()
+    } catch (error) {
+      console.log(error);
+    }
   }
 
 
@@ -33,8 +44,8 @@ return (
     value={description}
     />
   <Button
-  title='Add Todo'
-  onPress={UpdateTodo}
+    title='Update Todo'
+    onPress={UpdateTodo}
   />
   </View>
   )

@@ -11,12 +11,12 @@ const AddTodo = ({navigation}) => {
 
   const createTodo = async() => {
     try {
-      const res = await axios.post('http://127.0.0.1:8000/create/', {
+      const res = await axios.post('http://127.0.0.1:8000/todos/create/', {
         title: title,
         description: description
       })
       console.log(res);
-      navigation.navigate("Home")
+      navigation.goBack()
     } catch (error) {
       console.log(error);
       

@@ -1,7 +1,8 @@
 import { Button, StyleSheet, Text, TextInput, View, TouchableOpacity } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import { login, logout } from "../redux/slices/authSlice"
+import { login, logout, setToken } from "../redux/slices/authSlice"
+import axios from 'axios'
 
 
 const Login = ({navigation}) => {
@@ -27,15 +28,22 @@ const Login = ({navigation}) => {
 
   const delay = 3000
 
-  const attemptLogin = () => { 
-    if (username === "p" && password === "p"){
-       console.log("hello world");
+  const attemptLogin = async () => { 
+
+    try {
+      const response = await axios.post("http://127.0.0.1:8000/api/token/", {
+      username: username,
+      password: password
+    })
+    console.log(response.data.access);
+    dispatch(setToken(response.data))
     dispatch(login())
-    } 
-    else {
-      setErrorShown(true)
-      setError("Username or Password inccorect");
+    } catch (error) {
+      console.log(error);
     }
+
+
+
     clearTimeout(timer)
     timer = setTimeout(()=> {
       setErrorShown(false);

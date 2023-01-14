@@ -1,17 +1,18 @@
 import { Button, StyleSheet, Text, Alert, View, FlatList, TouchableOpacity } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import axios from 'axios';
-import { Ionicons, AntDesign } from '@expo/vector-icons'; 
+import { Ionicons, AntDesign } from '@expo/vector-icons';
 
 
 const Home = ({navigation}) => {
 
   
+  
   const [todos, setTodos] = useState([])
   
   const getTodos = async() => {
     try {
-      const res = await axios.get("http://127.0.0.1:8000/")
+      const res = await axios.get("http://127.0.0.1:8000/todos/")
       setTodos(res.data)
       console.log(todos);
     } catch (error) {
@@ -42,23 +43,14 @@ const Home = ({navigation}) => {
   }, [navigation]);
 
   const delete_todo = async(id) => {
-    // axios.delete(`http://127.0.0.1:8000/delete/${id}`) 
     try {
-      const res = await axios.delete(`http://127.0.0.1:8000/delete/${id}`)
+      const res = await axios.delete(`http://127.0.0.1:8000/todos/delete/${id}`)
       getTodos()
     } catch (error) {
       console.log(error);
     }
   }
 
-  // const update_todo = async(id, updatedData) => {
-  //   try {
-  //     const res = await axios.put(`http://127.0.0.1:8000/update/${id}`, updatedData)
-  //     getTodos()
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }
 
 
   return (
@@ -67,7 +59,15 @@ const Home = ({navigation}) => {
       onPress={() => navigation.navigate("AddTodo")}>
       <Ionicons name="add-circle" size={75} color="tomato"/>
       </TouchableOpacity>
-      <FlatList
+      
+      {!(todos.length > 0) && <View style={styles.noTodos}>
+        <Text>Tap </Text>
+        <Ionicons name="add-circle" size={20} color="tomato"/>
+        <Text> to add new todo</Text>
+        </View>}
+      
+
+      {todos.length > 0 && <FlatList
       data={todos}
       keyExtractor={item => item.id}
       renderItem={({item})=> {
@@ -85,7 +85,8 @@ const Home = ({navigation}) => {
             <TouchableOpacity
             onPress={() => navigation.navigate("UpdateTodo", {
               title: item.title,
-              description: item.description
+              description: item.description,
+              pk: item.id
             })}>
               <AntDesign name="edit" size={24} color="orange"/>
             </TouchableOpacity>
@@ -93,7 +94,12 @@ const Home = ({navigation}) => {
           </View>
         )
       }}     
-      />
+      />}
+
+
+
+
+
     </View>
   )
 }
@@ -103,8 +109,8 @@ export default Home
 const styles = StyleSheet.create({
 
   homeContainer: {
+    minHeight:"100%",
     paddingHorizontal: 30,
-
   },
 
   todoContainer: {
@@ -126,6 +132,13 @@ const styles = StyleSheet.create({
     bottom: 25,
     right: 25,
     zIndex: 999,
+  },
+  noTodos: {
+    minHeight: "100%",
+    flexDirection: 'row',
+    alignItems: "center",
+    justifyContent: "center",
+
   }
 })
 
